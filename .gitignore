@@ -1,2 +1,9 @@
 # visual studio files
 pacman.code-workspace
+
+# python files
+__pycache__/
+*.pyc
+
+# mac files
+*.DS_Store
