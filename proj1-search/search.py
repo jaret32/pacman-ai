@@ -17,7 +17,7 @@ In search.py, you will implement generic search algorithms which are called by
 Pacman agents (in searchAgents.py).
 """
 
-import util
+import util, searchUtil
 
 class SearchProblem:
     """
@@ -87,12 +87,57 @@ def depthFirstSearch(problem):
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
     """
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    # keep track of visited states
+    closed = []
+    # visit start state and push to stack
+    fringe = util.Stack()
+    node = searchUtil.SearchNode(problem.getStartState(), None, None)
+    fringe.push(node)
+    # depth-first search algorithm
+    while (not fringe.isEmpty()):
+        node = fringe.pop()
+        if problem.isGoalState(node.getState()):
+            break
+        if node.getState() not in closed:
+            closed.append(node.getState())
+            for successor in problem.getSuccessors(node.getState()):
+                fringe.push(searchUtil.SearchNode(successor[0], node, successor[1]))
+    # retrace path
+    moves = []
+    while (node.getMove() is not None):
+        moves.append(node.getMove())
+        node = node.getPrevious()
+    # reverse path
+    moves.reverse()
+    return moves
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    # keep track of visited states
+    # keep track of visited states
+    closed = []
+    # visit start state and push to stack
+    fringe = util.Queue()
+    node = searchUtil.SearchNode(problem.getStartState(), None, None)
+    fringe.push(node)
+    # depth-first search algorithm
+    while (not fringe.isEmpty()):
+        node = fringe.pop()
+        if problem.isGoalState(node.getState()):
+            break
+        if node.getState() not in closed:
+            closed.append(node.getState())
+            for successor in problem.getSuccessors(node.getState()):
+                fringe.push(searchUtil.SearchNode(successor[0], node, successor[1]))
+    # retrace path
+    moves = []
+    while (node.getMove() is not None):
+        moves.append(node.getMove())
+        node = node.getPrevious()
+    # reverse path
+    moves.reverse()
+    return moves
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
