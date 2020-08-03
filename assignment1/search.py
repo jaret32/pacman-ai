@@ -103,13 +103,7 @@ def depthFirstSearch(problem):
             for successor in problem.getSuccessors(node.getState()):
                 fringe.push(searchUtil.SearchNode(successor[0], node, successor[1]))
     # retrace path
-    moves = []
-    while (node.getMove() is not None):
-        moves.append(node.getMove())
-        node = node.getPrevious()
-    # reverse path
-    moves.reverse()
-    return moves
+    return node.getMoves()
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
@@ -130,13 +124,7 @@ def breadthFirstSearch(problem):
             for successor in problem.getSuccessors(node.getState()):
                 fringe.push(searchUtil.SearchNode(successor[0], node, successor[1]))
     # retrace path
-    moves = []
-    while (node.getMove() is not None):
-        moves.append(node.getMove())
-        node = node.getPrevious()
-    # reverse path
-    moves.reverse()
-    return moves
+    return node.getMoves()
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
@@ -146,7 +134,7 @@ def uniformCostSearch(problem):
     # visit start state and push to stack
     fringe = util.PriorityQueue()
     node = searchUtil.SearchNode(problem.getStartState(), None, None)
-    fringe.push(node, 1)
+    fringe.push(node, 0)
     # uniform cost algorithm
     while (not fringe.isEmpty()):
         node = fringe.pop()
@@ -157,13 +145,7 @@ def uniformCostSearch(problem):
             for successor in problem.getSuccessors(node.getState()):
                 fringe.push(searchUtil.SearchNode(successor[0], node, successor[1]), successor[2])
     # retrace path
-    moves = []
-    while (node.getMove() is not None):
-        moves.append(node.getMove())
-        node = node.getPrevious()
-    # reverse path
-    moves.reverse()
-    return moves
+    return node.getMoves()
 
 def nullHeuristic(state, problem=None):
     """
@@ -175,7 +157,27 @@ def nullHeuristic(state, problem=None):
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    # keep track of visited states
+    closed = []
+    # visit start state and push to stack
+    fringe = util.PriorityQueue()
+    node = searchUtil.SearchNode(problem.getStartState(), None, None)
+    fringe.push(node, 0)
+    # uniform cost algorithm
+    while (not fringe.isEmpty()):
+        node = fringe.pop()
+        if problem.isGoalState(node.getState()):
+            break
+        if node.getState() not in closed:
+            closed.append(node.getState())
+            for successor in problem.getSuccessors(node.getState()):
+                successor_node = searchUtil.SearchNode(successor[0], node, successor[1])
+                g = problem.getCostOfActions(successor_node.getMoves())
+                h = heuristic(successor_node.getState(), problem)
+                f = g + h
+                fringe.push(successor_node, f)
+    # retrace path
+    return node.getMoves()
 
 
 # Abbreviations
