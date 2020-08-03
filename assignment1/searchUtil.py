@@ -13,6 +13,3 @@ class SearchNode:
 
     def getState(self):
         return self.state
-    
-
-
