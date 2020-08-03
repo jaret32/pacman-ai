@@ -295,14 +295,15 @@ class CornersProblem(search.SearchProblem):
         space)
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        return (self.startingPosition, self.corners)
 
     def isGoalState(self, state):
         """
         Returns whether this search state is a goal state of the problem.
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        corners = state[1]
+        return len(corners) == 0
 
     def getSuccessors(self, state):
         """
@@ -317,14 +318,20 @@ class CornersProblem(search.SearchProblem):
 
         successors = []
         for action in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
-            # Add a successor state to the successor list if the action is legal
-            # Here's a code snippet for figuring out whether a new position hits a wall:
-            #   x,y = currentPosition
-            #   dx, dy = Actions.directionToVector(action)
-            #   nextx, nexty = int(x + dx), int(y + dy)
-            #   hitsWall = self.walls[nextx][nexty]
-
             "*** YOUR CODE HERE ***"
+            x,y = state[0]
+            dx, dy = Actions.directionToVector(action)
+            nextx, nexty = int(x + dx), int(y + dy)
+            corners = state[1]
+            if not self.walls[nextx][nexty]:
+                # if next state is a corner
+                if (nextx, nexty) in corners:
+                    # convert to list, remove element, convert to tuple
+                    cornerList = list(corners)
+                    cornerList.remove((nextx, nexty))
+                    corners = tuple(cornerList)
+                nextState = ((nextx, nexty), corners)
+                successors.append((nextState, action, 1))
 
         self._expanded += 1 # DO NOT CHANGE
         return successors
@@ -360,7 +367,17 @@ def cornersHeuristic(state, problem):
     walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
 
     "*** YOUR CODE HERE ***"
-    return 0 # Default to trivial solution
+    x,y = state[0]
+    corners = state[1]
+    nearest = float('inf')
+    if len(corners) == 0:
+        return 0
+    for (cx, cy) in corners:
+        distance = abs(x-cx) + abs(y-cy)
+        if distance < nearest:
+            nearest = distance
+    return nearest
+    
 
 class AStarCornersAgent(SearchAgent):
     "A SearchAgent for FoodSearchProblem using A* and your foodHeuristic"
