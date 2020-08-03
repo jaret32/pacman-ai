@@ -13,3 +13,9 @@ class SearchNode:
 
     def getState(self):
         return self.state
+
+    def getMoves(self):
+        if self.previous is None:
+            return []
+        else:
+            return self.previous.getMoves() + [self.move]
