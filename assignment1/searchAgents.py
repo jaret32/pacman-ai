@@ -295,7 +295,7 @@ class CornersProblem(search.SearchProblem):
         space)
         """
         "*** YOUR CODE HERE ***"
-        return (self.startingPosition, self.corners)
+        return (self.startingPosition, list(self.corners))
 
     def isGoalState(self, state):
         """
@@ -324,15 +324,12 @@ class CornersProblem(search.SearchProblem):
             nextx, nexty = int(x + dx), int(y + dy)
             corners = state[1]
             if not self.walls[nextx][nexty]:
-                # if next state is a corner
+                # remove corner if eaten
                 if (nextx, nexty) in corners:
-                    # convert to list, remove element, convert to tuple
-                    cornerList = list(corners)
-                    cornerList.remove((nextx, nexty))
-                    corners = tuple(cornerList)
+                    # remove corner
+                    corners.remove((nextx, nexty))
                 nextState = ((nextx, nexty), corners)
                 successors.append((nextState, action, 1))
-
         self._expanded += 1 # DO NOT CHANGE
         return successors
 
