@@ -366,14 +366,12 @@ def cornersHeuristic(state, problem):
     "*** YOUR CODE HERE ***"
     x,y = state[0]
     corners = state[1]
-    nearest = float('inf')
-    if len(corners) == 0:
-        return 0
+    furthest = 0
     for (cx, cy) in corners:
         distance = abs(x-cx) + abs(y-cy)
-        if distance < nearest:
-            nearest = distance
-    return nearest
+        if distance > furthest:
+            furthest = distance
+    return furthest
     
 
 class AStarCornersAgent(SearchAgent):
@@ -468,6 +466,7 @@ def foodHeuristic(state, problem):
     """
     position, foodGrid = state
     "*** YOUR CODE HERE ***"
+
     return 0
 
 class ClosestDotSearchAgent(SearchAgent):
