@@ -295,7 +295,7 @@ class CornersProblem(search.SearchProblem):
         space)
         """
         "*** YOUR CODE HERE ***"
-        return (self.startingPosition, list(self.corners))
+        return (self.startingPosition, self.corners)
 
     def isGoalState(self, state):
         """
@@ -327,7 +327,9 @@ class CornersProblem(search.SearchProblem):
                 # remove corner if eaten
                 if (nextx, nexty) in corners:
                     # remove corner
-                    corners.remove((nextx, nexty))
+                    cornerList = list(corners)
+                    cornerList.remove((nextx, nexty))
+                    corners = tuple(cornerList)
                 nextState = ((nextx, nexty), corners)
                 successors.append((nextState, action, 1))
         self._expanded += 1 # DO NOT CHANGE
@@ -504,7 +506,7 @@ class ClosestDotSearchAgent(SearchAgent):
         problem = AnyFoodSearchProblem(gameState)
 
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        return search.breadthFirstSearch(problem)
 
 class AnyFoodSearchProblem(PositionSearchProblem):
     """
@@ -540,7 +542,7 @@ class AnyFoodSearchProblem(PositionSearchProblem):
         x,y = state
 
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        return self.food[x][y]
 
 def mazeDistance(point1, point2, gameState):
     """
